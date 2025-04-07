@@ -37,3 +37,11 @@ Your output will look like this (open in browser):
 ```bash
 git clone https://github.com/timdigga/satellite-tracker.git
 cd satellite-tracker
+pip install -r requirements.txt
+```
+or 
+```
+pip install skyfield geocoder geopy folium
+```
+
+
