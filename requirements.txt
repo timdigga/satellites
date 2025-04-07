@@ -1,0 +1,4 @@
+skyfield==1.45
+geocoder==1.38.1
+geopy==2.4.1
+folium==0.15.1
