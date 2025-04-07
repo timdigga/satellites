@@ -37,11 +37,19 @@ Your output will look like this (open in browser):
 ```bash
 git clone https://github.com/timdigga/satellite-tracker.git
 cd satellite-tracker
+```
+### 2. Install the requirements
+```
 pip install -r requirements.txt
 ```
 or 
 ```
 pip install skyfield geocoder geopy folium
+```
+### 3. Run the python code
+
+```
+python satellites.py
 ```
 
 
