@@ -5,6 +5,7 @@ import time
 import folium
 from geopy.distance import geodesic
 
+
 def display_menu():
     print("""
     ################################################
@@ -17,6 +18,36 @@ def display_menu():
     ################################################
     """)
 
+
+def get_user_location():
+    choice = input("\n🌍 Standort automatisch erkennen? (j/n): ").lower()
+    if choice == 'j':
+        g = geocoder.ip('me')
+        if g.ok and g.latlng:
+            return g.latlng
+        else:
+            print("⚠️ Konnte Standort nicht erkennen. Standard: Berlin.")
+            return 52.5200, 13.4050
+    else:
+        try:
+            lat = float(input("Breitengrad eingeben: "))
+            lon = float(input("Längengrad eingeben: "))
+            return lat, lon
+        except:
+            print("❌ Ungültige Eingabe. Standard: Berlin.")
+            return 52.5200, 13.4050
+
+
+def create_map(location):
+    return folium.Map(
+        location=location,
+        zoom_start=4,
+        tiles='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        attr='Map data © OpenStreetMap contributors'
+    )
+
+
+# Run program
 display_menu()
 
 # List of satellites to track
@@ -30,19 +61,13 @@ by_name = {sat.name: sat for sat in stations if sat.name in satellite_names}
 # Load time scale
 ts = load.timescale()
 
-# Get user's current location via IP
-g = geocoder.ip('me')
-if g.ok and g.latlng:
-    latitude, longitude = g.latlng
-else:
-    print("⚠️ Could not determine your location via IP. Defaulting to Berlin.")
-    latitude, longitude = 52.5200, 13.4050
-
+# Get user's location
+latitude, longitude = get_user_location()
 print(f"📍 Your location: {latitude:.4f}, {longitude:.4f}")
 location = wgs84.latlon(latitude, longitude)
 
-# Create map centered on user's location
-m = folium.Map(location=[latitude, longitude], zoom_start=4)
+# Create map
+m = create_map([latitude, longitude])
 folium.Marker([latitude, longitude], tooltip="Your Location", icon=folium.Icon(color="blue")).add_to(m)
 
 # Loop through each satellite
@@ -111,6 +136,7 @@ m.save("satellite_tracking_map.html")
 print("\n🗺️ Map saved as 'satellite_tracking_map.html' — open it in your browser!")
 
 print("Visit : https://github.com/timdigga")
+
 # Keep script alive (like original)
 while True:
     time.sleep(1)
